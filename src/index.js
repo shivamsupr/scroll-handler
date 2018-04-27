@@ -1,13 +1,53 @@
-import { isScrollIntoView, registerScrollToView, unregisterScrollToView } from './addons/events';
+const sg = {};
 
-const CSSupportLib = () => {};
+const registerScrollToView = (element, callback, allowNext, delay) => {
+  if (!sg.scrollListners) {
+    sg.scrollListners = [];
+  }
+  
+  sg.scrollListners.push({element, callback});
+  
+  if (!sg.scrollInitialized) {
+    let scrolled = null;
+    window.onscroll = () => {
+      if (!scrolled) {
+        scrolled = setTimeout(() => {
+          const doneIndexes = [];
+          sg.scrollListners.forEach((scrollListner, index) => {
+            const {element: elem, callback: cb} = scrollListner;
+            
+            if (CSSL.isScrollIntoView(elem)) {
+              if (!allowNext) {
+                doneIndexes.push(index);
+              }
+              cb(window.pageYOffset);
+            }
+            
+            cb(window.pageYOffset);
+          });
+          
+          doneIndexes.forEach((index, doneIndex) => {
+            sg.scrollListners.splice(doneIndex, 1);
+          });
+          
+          scrolled = null;
+        }, delay);
+      }
+    };
+    sg.scrollInitialized = true;
+  }
+};
 
-const CSSL = new CSSupportLib();
+const unregisterScrollToView = (element, callback) => {
+  sg.scrollListners = sg.scrollListners.filter(scrollListner => scrollListner.element !== element);
+  return callback();
+};
 
-CSSL.g = {};
+const isScrollIntoView = element => {
+  const {top, right, bottom, left} = element.getBoundingClientRect();
+  const html = document.documentElement;
+  
+  return top >= 0 && left >= 0 && bottom <= (window.innerHeight || html.clientHeight) && right <= (window.innerWidth || html.clientWidth);
+};
 
-CSSupportLib.prototype.registerScrollToView = registerScrollToView;
-CSSupportLib.prototype.unregisterScrollToView = unregisterScrollToView;
-CSSupportLib.prototype.isScrollIntoView = isScrollIntoView;
-
-export { CSSupportLib, CSSL };
+export {registerScrollToView, unregisterScrollToView, isScrollIntoView};

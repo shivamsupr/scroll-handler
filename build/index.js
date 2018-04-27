@@ -1,21 +1,69 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CSSL = exports.CSSupportLib = undefined;
+var sg = {};
 
-var _events = require('./addons/events');
+var registerScrollToView = function registerScrollToView(element, callback, allowNext, delay) {
+  if (!sg.scrollListners) {
+    sg.scrollListners = [];
+  }
 
-var CSSupportLib = function CSSupportLib() {};
+  sg.scrollListners.push({ element: element, callback: callback });
 
-var CSSL = new CSSupportLib();
+  if (!sg.scrollInitialized) {
+    var scrolled = null;
+    window.onscroll = function () {
+      if (!scrolled) {
+        scrolled = setTimeout(function () {
+          var doneIndexes = [];
+          sg.scrollListners.forEach(function (scrollListner, index) {
+            var elem = scrollListner.element,
+                cb = scrollListner.callback;
 
-CSSL.g = {};
 
-CSSupportLib.prototype.registerScrollToView = _events.registerScrollToView;
-CSSupportLib.prototype.unregisterScrollToView = _events.unregisterScrollToView;
-CSSupportLib.prototype.isScrollIntoView = _events.isScrollIntoView;
+            if (CSSL.isScrollIntoView(elem)) {
+              if (!allowNext) {
+                doneIndexes.push(index);
+              }
+              cb(window.pageYOffset);
+            }
 
-exports.CSSupportLib = CSSupportLib;
-exports.CSSL = CSSL;
+            cb(window.pageYOffset);
+          });
+
+          doneIndexes.forEach(function (index, doneIndex) {
+            sg.scrollListners.splice(doneIndex, 1);
+          });
+
+          scrolled = null;
+        }, delay);
+      }
+    };
+    sg.scrollInitialized = true;
+  }
+};
+
+var unregisterScrollToView = function unregisterScrollToView(element, callback) {
+  sg.scrollListners = sg.scrollListners.filter(function (scrollListner) {
+    return scrollListner.element !== element;
+  });
+  return callback();
+};
+
+var isScrollIntoView = function isScrollIntoView(element) {
+  var _element$getBoundingC = element.getBoundingClientRect(),
+      top = _element$getBoundingC.top,
+      right = _element$getBoundingC.right,
+      bottom = _element$getBoundingC.bottom,
+      left = _element$getBoundingC.left;
+
+  var html = document.documentElement;
+
+  return top >= 0 && left >= 0 && bottom <= (window.innerHeight || html.clientHeight) && right <= (window.innerWidth || html.clientWidth);
+};
+
+exports.registerScrollToView = registerScrollToView;
+exports.unregisterScrollToView = unregisterScrollToView;
+exports.isScrollIntoView = isScrollIntoView;
