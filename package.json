@@ -1,6 +1,6 @@
 {
   "name": "@shaaditech/scroll-handler",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Handling scroll events on browser",
   "main": "src/index.js",
   "repository": "https://github.com/shivamsupr/scroll-handler",
