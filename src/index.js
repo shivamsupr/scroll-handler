@@ -1,6 +1,6 @@
 const sg = {};
 
-const registerScrollToView = (element, callback, allowNext, delay) => {
+const registerScrollToView = (element, callback, allowNext = false, delay = 0) => {
   if (!sg.scrollListners) {
     sg.scrollListners = [];
   }

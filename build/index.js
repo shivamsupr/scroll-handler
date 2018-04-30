@@ -5,7 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 var sg = {};
 
-var registerScrollToView = function registerScrollToView(element, callback, allowNext, delay) {
+var registerScrollToView = function registerScrollToView(element, callback) {
+  var allowNext = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  var delay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+
   if (!sg.scrollListners) {
     sg.scrollListners = [];
   }
