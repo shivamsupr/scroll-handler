@@ -23,7 +23,7 @@ var registerScrollToView = function registerScrollToView(element, callback, allo
                 cb = scrollListner.callback;
 
 
-            if (CSSL.isScrollIntoView(elem)) {
+            if (isScrollIntoView(elem)) {
               if (!allowNext) {
                 doneIndexes.push(index);
               }

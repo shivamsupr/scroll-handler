@@ -16,7 +16,7 @@ const registerScrollToView = (element, callback, allowNext, delay) => {
           sg.scrollListners.forEach((scrollListner, index) => {
             const {element: elem, callback: cb} = scrollListner;
             
-            if (CSSL.isScrollIntoView(elem)) {
+            if (isScrollIntoView(elem)) {
               if (!allowNext) {
                 doneIndexes.push(index);
               }
