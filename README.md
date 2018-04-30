@@ -1,10 +1,8 @@
-### scroll-handler  
-  
-  
-##### Scroll handler helps you manage all window scroll events at a single place.  
   
 ## Documentation  
-  
+
+##### Scroll handler helps you manage all window scroll events at a single place.  
+
 ### Installation  
   
 **npm**  
