@@ -1,9 +1,9 @@
-const sg = {};
+const sg = {
+  scrollListners: [],
+  scrollInitialized: false,
+};
 
 const registerScrollToView = (element, callback, allowNext, delay) => {
-  if (!sg.scrollListners) {
-    sg.scrollListners = [];
-  }
   
   sg.scrollListners.push({element, callback});
   
