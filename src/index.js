@@ -14,16 +14,13 @@ const registerScrollToView = (element, callback, allowNext, delay) => {
         scrolled = setTimeout(() => {
           const doneIndexes = [];
           sg.scrollListners.forEach((scrollListner, index) => {
-            const {element: elem, callback: cb} = scrollListner;
-            
-            if (isScrollIntoView(elem)) {
-              if (!allowNext) {
-                doneIndexes.push(index);
-              }
-              cb(window.pageYOffset);
+            const { element, callback } = scrollListner;
+
+            if (isScrollIntoView(element) && !allowNext) {
+              doneIndexes.push(index);
             }
-            
-            cb(window.pageYOffset);
+
+            callback(window.pageYOffset);
           });
           
           doneIndexes.forEach((index, doneIndex) => {
